@@ -20,7 +20,7 @@ app.set("view engine", "handlebars");
 
 // Index route
 app.get("/", (req, res) => {
-  const title = "WELCOME";
+  const title = "Welcome";
   res.render("index", { title: title }); // here 'index' is the name of the handlebar
 }); // Here dynamic Data is passed by the second argument
 
