@@ -2,6 +2,12 @@ const express = require("express");
 
 const app = express(); //initialize application
 
+//How middleware  works
+app.use((req, res, next) => {
+  console.log(Date.now());
+  next();
+});
+
 // Index route
 app.get("/", (req, res) => {
   res.send("INDEX!");
