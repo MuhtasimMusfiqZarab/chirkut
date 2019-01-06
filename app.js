@@ -1,7 +1,17 @@
 const express = require("express");
 const exphbs = require("express-handlebars");
+const mongoose = require("mongoose");
 
 const app = express(); //initialize application
+
+//Map global promise - get rid of warning (Did not work here)
+mongoose.Promise = global.Promise;
+
+//Connect To Mongoose
+mongoose
+  .connect("mongodb://localhost/chirkut")
+  .then(() => console.log("Mongodb connected ..."))
+  .catch(err => console.log(err)); // this can be mLab DAtabase or mlab database
 
 //Handlebars middleware(got it from the git express-handlebars documentations)
 app.engine(
