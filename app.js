@@ -13,6 +13,10 @@ mongoose
   .then(() => console.log("Mongodb connected ..."))
   .catch(err => console.log(err)); // this can be mLab DAtabase or mlab database
 
+//Load Idea Models
+require("./models/Idea");
+const Idea = mongoose.model("ideas");
+
 //Handlebars middleware(got it from the git express-handlebars documentations)
 app.engine(
   "handlebars",
