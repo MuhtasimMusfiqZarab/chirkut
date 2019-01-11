@@ -3,6 +3,8 @@ const exphbs = require("express-handlebars");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
+const flash = require("connect-flash");
+const session = require("express-session");
 const app = express(); //initialize application
 
 //Map global promise - get rid of warning (Did not work here)
@@ -34,11 +36,26 @@ app.use(bodyParser.json());
 //Method Override middleware
 app.use(methodOverride("_method"));
 
-//How middleware  works
-// app.use((req, res, next) => {
-//   console.log(Date.now());
-//   next();
-// });
+//Express sesson middleware
+app.use(
+  session({
+    secret: "secret",
+    resave: true,
+    saveUninitialized: true
+  })
+);
+
+//coonnect-flash middleware
+
+app.use(flash());
+
+//Global variables
+app.use((req, res, next) => {
+  res.locals.success_msg = req.flash("success_msg");
+  res.locals.error_msg = req.flash("error_msg");
+  res.locals.error = req.flash("error");
+  next();
+});
 
 // Index route
 app.get("/", (req, res) => {
@@ -99,6 +116,7 @@ app.post("/ideas", (req, res) => {
       details: req.body.details
     };
     new Idea(newUser).save().then(idea => {
+      req.flash("success_msg", "Idea Added");
       res.redirect("/ideas");
     });
   }
@@ -113,6 +131,7 @@ app.put("/ideas/:id", (req, res) => {
     idea.title = req.body.title;
     idea.details = req.body.details;
     idea.save().then(idea => {
+      req.flash("success_msg", "Idea Updated");
       res.redirect("/ideas");
     });
   });
@@ -123,6 +142,7 @@ app.delete("/ideas/:id", (req, res) => {
   Idea.remove({
     _id: req.params.id
   }).then(() => {
+    req.flash("success_msg", "Idea Removed");
     res.redirect("/ideas");
   });
 });
