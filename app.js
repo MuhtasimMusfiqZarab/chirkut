@@ -1,6 +1,7 @@
 const express = require("express");
 const exphbs = require("express-handlebars");
 const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 
 const app = express(); //initialize application
 
@@ -17,7 +18,7 @@ mongoose
 require("./models/Idea");
 const Idea = mongoose.model("ideas");
 
-//Handlebars middleware(got it from the git express-handlebars documentations)
+//Handlebars middleware
 app.engine(
   "handlebars",
   exphbs({
@@ -25,6 +26,10 @@ app.engine(
   })
 );
 app.set("view engine", "handlebars");
+
+// body parser middleware
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 //How middleware  works
 // app.use((req, res, next) => {
@@ -46,6 +51,26 @@ app.get("/about", (req, res) => {
 //About Idea Form
 app.get("/ideas/add", (req, res) => {
   res.render("ideas/add"); // here 'about' is the name of the handlebar
+});
+
+//Process Form
+app.post("/ideas", (req, res) => {
+  let errors = [];
+  if (!req.body.title) {
+    errors.push({ text: "Please add a title" });
+  }
+  if (!req.body.details) {
+    errors.push({ text: "Please add some details" });
+  }
+  if (errors.length > 0) {
+    res.render("ideas/add", {
+      errors: errors,
+      title: req.body.title,
+      details: req.body.details
+    });
+  } else {
+    res.send("passed");
+  }
 });
 
 // port initialization
