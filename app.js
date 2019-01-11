@@ -43,6 +43,11 @@ app.get("/about", (req, res) => {
   res.render("about"); // here 'about' is the name of the handlebar
 });
 
+//About Idea Form
+app.get("/ideas/add", (req, res) => {
+  res.render("ideas/add"); // here 'about' is the name of the handlebar
+});
+
 // port initialization
 const port = 5000;
 
