@@ -118,6 +118,15 @@ app.put("/ideas/:id", (req, res) => {
   });
 });
 
+//Delete Idea
+app.delete("/ideas/:id", (req, res) => {
+  Idea.remove({
+    _id: req.params.id
+  }).then(() => {
+    res.redirect("/ideas");
+  });
+});
+
 // port initialization
 const port = 5000;
 
