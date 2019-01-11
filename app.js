@@ -2,7 +2,7 @@ const express = require("express");
 const exphbs = require("express-handlebars");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-
+const methodOverride = require("method-override");
 const app = express(); //initialize application
 
 //Map global promise - get rid of warning (Did not work here)
@@ -30,6 +30,9 @@ app.set("view engine", "handlebars");
 // body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+//Method Override middleware
+app.use(methodOverride("_method"));
 
 //How middleware  works
 // app.use((req, res, next) => {
@@ -59,9 +62,20 @@ app.get("/ideas", (req, res) => {
     });
 });
 
-//About Idea Form
+//Add Idea Form
 app.get("/ideas/add", (req, res) => {
   res.render("ideas/add"); // here 'about' is the name of the handlebar
+});
+
+//Edit Idea Form
+app.get("/ideas/edit/:id", (req, res) => {
+  Idea.findOne({
+    _id: req.params.id
+  }).then(idea => {
+    res.render("ideas/edit", {
+      idea: idea
+    });
+  });
 });
 
 //Process Form
@@ -88,6 +102,20 @@ app.post("/ideas", (req, res) => {
       res.redirect("/ideas");
     });
   }
+});
+
+//Edit Form Process
+app.put("/ideas/:id", (req, res) => {
+  Idea.findOne({
+    _id: req.params.id
+  }).then(idea => {
+    //new values
+    idea.title = req.body.title;
+    idea.details = req.body.details;
+    idea.save().then(idea => {
+      res.redirect("/ideas");
+    });
+  });
 });
 
 // port initialization
