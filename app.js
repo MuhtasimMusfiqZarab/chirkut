@@ -6,6 +6,7 @@ const methodOverride = require("method-override");
 const flash = require("connect-flash");
 const session = require("express-session");
 const app = express(); //initialize application
+const path = require("path");
 
 //Load Routes
 const ideas = require("./routes/ideas");
@@ -32,6 +33,9 @@ app.set("view engine", "handlebars");
 // body parser middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+//Static folder
+app.use(express.static(path.join(__dirname, "public")));
 
 //Method Override middleware
 app.use(methodOverride("_method"));
