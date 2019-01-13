@@ -7,6 +7,10 @@ const flash = require("connect-flash");
 const session = require("express-session");
 const app = express(); //initialize application
 
+//Load Routes
+const ideas = require("./routes/ideas");
+const users = require("./routes/users");
+
 //Map global promise - get rid of warning (Did not work here)
 mongoose.Promise = global.Promise;
 
@@ -15,10 +19,6 @@ mongoose
   .connect("mongodb://localhost/chirkut")
   .then(() => console.log("Mongodb connected ..."))
   .catch(err => console.log(err)); // this can be mLab DAtabase or mlab database
-
-//Load Idea Models
-require("./models/Idea");
-const Idea = mongoose.model("ideas");
 
 //Handlebars middleware
 app.engine(
@@ -68,84 +68,9 @@ app.get("/about", (req, res) => {
   res.render("about"); // here 'about' is the name of the handlebar
 });
 
-//Idea Index Page
-app.get("/ideas", (req, res) => {
-  Idea.find({})
-    .sort({ date: "desc" })
-    .then(ideas => {
-      res.render("ideas/index", {
-        ideas: ideas
-      });
-    });
-});
-
-//Add Idea Form
-app.get("/ideas/add", (req, res) => {
-  res.render("ideas/add"); // here 'about' is the name of the handlebar
-});
-
-//Edit Idea Form
-app.get("/ideas/edit/:id", (req, res) => {
-  Idea.findOne({
-    _id: req.params.id
-  }).then(idea => {
-    res.render("ideas/edit", {
-      idea: idea
-    });
-  });
-});
-
-//Process Form
-app.post("/ideas", (req, res) => {
-  let errors = [];
-  if (!req.body.title) {
-    errors.push({ text: "Please add a title" });
-  }
-  if (!req.body.details) {
-    errors.push({ text: "Please add some details" });
-  }
-  if (errors.length > 0) {
-    res.render("ideas/add", {
-      errors: errors,
-      title: req.body.title,
-      details: req.body.details
-    });
-  } else {
-    const newUser = {
-      title: req.body.title,
-      details: req.body.details
-    };
-    new Idea(newUser).save().then(idea => {
-      req.flash("success_msg", "Idea Added");
-      res.redirect("/ideas");
-    });
-  }
-});
-
-//Edit Form Process
-app.put("/ideas/:id", (req, res) => {
-  Idea.findOne({
-    _id: req.params.id
-  }).then(idea => {
-    //new values
-    idea.title = req.body.title;
-    idea.details = req.body.details;
-    idea.save().then(idea => {
-      req.flash("success_msg", "Idea Updated");
-      res.redirect("/ideas");
-    });
-  });
-});
-
-//Delete Idea
-app.delete("/ideas/:id", (req, res) => {
-  Idea.remove({
-    _id: req.params.id
-  }).then(() => {
-    req.flash("success_msg", "Idea Removed");
-    res.redirect("/ideas");
-  });
-});
+//Use Routes
+app.use("/ideas", ideas);
+app.use("/users", users);
 
 // port initialization
 const port = 5000;
