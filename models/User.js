@@ -23,4 +23,4 @@ const UserSchema = new Schema({
   }
 });
 
-mongoose.model("ideas", UserSchema);
+mongoose.model("users", UserSchema);

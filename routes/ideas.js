@@ -1,6 +1,6 @@
 const express = require("express");
-const router = express.Router();
 const mongoose = require("mongoose");
+const router = express.Router();
 
 //Load Idea Models
 require("../models/Idea");
@@ -49,11 +49,11 @@ router.post("/", (req, res) => {
       details: req.body.details
     });
   } else {
-    const newUser = {
+    const newIdea = {
       title: req.body.title,
       details: req.body.details
     };
-    new Idea(newUser).save().then(idea => {
+    new Idea(newIdea).save().then(idea => {
       req.flash("success_msg", "Idea Added");
       res.redirect("/ideas");
     });
