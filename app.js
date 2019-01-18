@@ -15,12 +15,15 @@ const users = require("./routes/users");
 
 //Passport Config
 require("./config/passport")(passport);
+
+//DB config
+const db = require("./config/database");
 //Map global promise - get rid of warning (Did not work here)
 mongoose.Promise = global.Promise;
 
 //Connect To Mongoose
 mongoose
-  .connect("mongodb://localhost/chirkut")
+  .connect(db.mongoURI)
   .then(() => console.log("Mongodb connected ..."))
   .catch(err => console.log(err)); // this can be mLab DAtabase or mlab database
 
