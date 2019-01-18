@@ -4,7 +4,7 @@
   "description": "Write Ideas for future implementation",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js"
   },
   "author": "Muhtasim Musfiq Zarab",
   "license": "ISC",

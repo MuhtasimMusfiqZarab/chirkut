@@ -85,7 +85,7 @@ app.use("/ideas", ideas);
 app.use("/users", users);
 
 // port initialization
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 app.listen(port, () => {
   console.log(`Server Stated on port ${port}`);
